@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.vsls.surfquiz.R
 import ru.vsls.surfquiz.presentation.items.QuizQuestionBlock
 import ru.vsls.surfquiz.presentation.items.QuizResultBlock
@@ -44,7 +44,7 @@ fun DetailsScreen(
             uiState.isLoading -> CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
             uiState.error != null -> Text("Ошибка: ${uiState.error}")
             else -> {
-                ListDetails(uiState, { onBackToStart() })
+                ListDetails(uiState, onBackToStart = onBackToStart)
             }
         }
     }

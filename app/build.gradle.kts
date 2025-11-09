@@ -5,7 +5,6 @@ plugins {
 
     alias(libs.plugins.pluginSerialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
 }
 
