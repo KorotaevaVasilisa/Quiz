@@ -1,6 +1,5 @@
 package ru.vsls.surfquiz.domain.usecase
 
-import android.util.Log.i
 import ru.vsls.surfquiz.domain.repository.QuizLocalRepository
 import javax.inject.Inject
 

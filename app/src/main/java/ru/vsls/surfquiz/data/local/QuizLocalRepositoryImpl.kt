@@ -1,8 +1,7 @@
 package ru.vsls.surfquiz.data.local
 
 import ru.vsls.surfquiz.data.local.dao.QuizDao
-import ru.vsls.surfquiz.data.local.entities.ResultQuizDt
-import ru.vsls.surfquiz.data.local.entities.UserQuizAnswer
+import ru.vsls.surfquiz.data.local.mappers.toDomain
 import ru.vsls.surfquiz.data.local.mappers.toEntity
 import ru.vsls.surfquiz.data.local.mappers.toUserQuizAnswerEntity
 import ru.vsls.surfquiz.domain.model.QuizDetailsEntry
@@ -15,16 +14,16 @@ class QuizLocalRepositoryImpl @Inject constructor(private val api: QuizDao) : Qu
         return api.insertResult(result.toEntity())
     }
 
-    override suspend fun getHistory(): List<ResultQuizDt> {
-        return api.getAllResults()
+    override suspend fun getHistory(): List<QuizHistoryEntry> {
+        return api.getAllResults().map { it.toDomain() }
     }
 
     override suspend fun deleteHistoryById(id: Long) {
         api.deleteHistoryById(id)
     }
 
-    override suspend fun getDetails(id: Long): UserQuizAnswer {
-        return api.getDetailsById(id)
+    override suspend fun getDetails(id: Long): QuizDetailsEntry {
+        return api.getDetailsById(id).toDomain()
     }
 
     override suspend fun saveDetails(details: QuizDetailsEntry) {
