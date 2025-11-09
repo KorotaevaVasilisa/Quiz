@@ -89,6 +89,7 @@ class QuizViewModel @Inject constructor(
             viewModelScope.launch {
                 val historyId = saveQuizResultUseCase(
                     QuizHistoryEntry(
+                        id = 0,
                         dateTime = System.currentTimeMillis(),
                         correctAnswers = correctCount,
                         totalQuestions = state.questions.size,
@@ -97,6 +98,7 @@ class QuizViewModel @Inject constructor(
                 )
                 saveQuizDetailsUseCase(
                     QuizDetailsEntry(
+                        id = 0,
                         resultId = historyId,
                         correctCount = correctCount,
                         usersAnswers = state.userAnswers,

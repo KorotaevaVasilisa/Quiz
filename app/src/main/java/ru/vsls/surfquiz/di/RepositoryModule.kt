@@ -5,8 +5,8 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.vsls.surfquiz.data.local.QuizLocalRepositoryImpl
-import ru.vsls.surfquiz.domain.repository.QuizRepository
-import ru.vsls.surfquiz.data.remote.repository.QuizRepositoryImpl
+import ru.vsls.surfquiz.domain.repository.QuizRemoteRepository
+import ru.vsls.surfquiz.data.remote.repository.QuizRemoteRepositoryImpl
 import ru.vsls.surfquiz.domain.repository.QuizLocalRepository
 import ru.vsls.surfquiz.domain.usecase.GetQuizzesUseCase
 import ru.vsls.surfquiz.domain.usecase.GetQuizzesUseCaseImpl
@@ -27,7 +27,7 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
     @Binds
     @Singleton
-    abstract fun bindQuizRepository(impl: QuizRepositoryImpl): QuizRepository
+    abstract fun bindQuizRepository(impl: QuizRemoteRepositoryImpl): QuizRemoteRepository
 
     @Binds
     @Singleton
