@@ -3,13 +3,16 @@ package ru.vsls.surfquiz.data.local
 import ru.vsls.surfquiz.data.local.dao.QuizDao
 import ru.vsls.surfquiz.data.local.entities.ResultQuizDt
 import ru.vsls.surfquiz.data.local.entities.UserQuizAnswer
+import ru.vsls.surfquiz.data.local.mappers.toEntity
+import ru.vsls.surfquiz.data.local.mappers.toUserQuizAnswerEntity
+import ru.vsls.surfquiz.domain.model.QuizDetailsEntry
+import ru.vsls.surfquiz.domain.model.QuizHistoryEntry
 import ru.vsls.surfquiz.domain.repository.QuizLocalRepository
 import javax.inject.Inject
 
-class QuizLocalRepositoryImpl @Inject constructor(private val api: QuizDao): QuizLocalRepository
-{
-    override suspend fun saveResult(result: ResultQuizDt):Long {
-        return api.insertResult(result)
+class QuizLocalRepositoryImpl @Inject constructor(private val api: QuizDao) : QuizLocalRepository {
+    override suspend fun saveHistory(result: QuizHistoryEntry): Long {
+        return api.insertResult(result.toEntity())
     }
 
     override suspend fun getHistory(): List<ResultQuizDt> {
@@ -24,8 +27,8 @@ class QuizLocalRepositoryImpl @Inject constructor(private val api: QuizDao): Qui
         return api.getDetailsById(id)
     }
 
-    override suspend fun saveDetails(details: UserQuizAnswer) {
-        api.insertDetails(details)
+    override suspend fun saveDetails(details: QuizDetailsEntry) {
+        api.insertDetails(details.toUserQuizAnswerEntity())
     }
 
     override suspend fun deleteDetailsById(id: Long) {

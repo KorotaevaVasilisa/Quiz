@@ -1,6 +1,5 @@
 package ru.vsls.surfquiz.domain.usecase
 
-import ru.vsls.surfquiz.data.local.mappers.toUserQuizAnswerEntity
 import ru.vsls.surfquiz.domain.model.QuizDetailsEntry
 import ru.vsls.surfquiz.domain.repository.QuizLocalRepository
 import javax.inject.Inject
@@ -13,5 +12,5 @@ class SaveQuizDetailsUseCaseImpl @Inject constructor(
     private val repository: QuizLocalRepository,
 ) : SaveQuizDetailsUseCase {
     override suspend fun invoke(entry: QuizDetailsEntry) =
-        repository.saveDetails(entry.toUserQuizAnswerEntity())
+        repository.saveDetails(entry)
 }
