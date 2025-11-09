@@ -4,7 +4,9 @@ package ru.vsls.surfquiz.presentation.screens.detailed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -14,22 +16,22 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(private val getQuizDetailUseCase: GetQuizDetailsUseCase) :
     ViewModel() {
-    private val _state = MutableStateFlow(DetailsUiState())
-    val state: StateFlow<DetailsUiState> = _state.asStateFlow()
+    private val _state = MutableStateFlow<DetailsState>(DetailsState.Initial)
+    val state: StateFlow<DetailsState> = _state.asStateFlow()
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage: SharedFlow<String> = _toastMessage
 
     fun loadDetails(id: Long?) {
+        _state.value = DetailsState.Loading
+
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true, error = null)
             try {
                 if (id != null) {
                     val details = getQuizDetailUseCase.invoke(id)
-                    _state.value = DetailsUiState(details = details)
+                    _state.value = DetailsState.Content(details = details)
                 }
             } catch (e: Exception) {
-                _state.value = _state.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+                _toastMessage.emit("Ошибка загрузки: ${e.message}")
             }
         }
     }
