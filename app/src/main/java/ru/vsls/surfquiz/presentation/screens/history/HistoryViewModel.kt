@@ -18,28 +18,28 @@ class HistoryViewModel @Inject constructor(
     private val getQuizHistoryUseCase: GetQuizHistoryUseCase,
     private val deleteQuizHistoryUseCase: DeleteQuizHistoryEntryUseCase,
 ) : ViewModel() {
-    private val _state = MutableStateFlow(HistoryUiState())
-    val state: StateFlow<HistoryUiState> = _state.asStateFlow()
+    private val _state = MutableStateFlow<HistoryState>(HistoryState.Initial)
+    val state: StateFlow<HistoryState> = _state.asStateFlow()
 
     // SharedFlow для событий (показ тоста)
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage: SharedFlow<String> = _toastMessage
 
     fun loadHistory() {
-        _state.value = _state.value.copy(isLoading = true, error = null)
+        _state.value = HistoryState.Loading
         viewModelScope.launch {
             try {
-                val history = getQuizHistoryUseCase()
-                val uiHistory = history.toUiModels()
-                _state.value = _state.value.copy(isLoading = false, history = uiHistory)
+                val history = getQuizHistoryUseCase().toUiModels()
+                _state.value = HistoryState.Content(history = history)
             } catch (e: Exception) {
-                _state.value = _state.value.copy(isLoading = false, error = e.message)
+                _toastMessage.emit("Ошибка загрузки: ${e.message}")
             }
         }
     }
 
     fun selectItem(id: Long?) {
-        _state.value = _state.value.copy(selectedItemId = id)
+        val state = _state.value as? HistoryState.Content ?: return
+        _state.value = state.copy(selectedItemId = id)
     }
 
     fun deleteEntry(id: Long) {

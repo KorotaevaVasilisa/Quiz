@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,38 +43,41 @@ fun HistoryScreen(
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
-    when {
-        state.isLoading -> CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
-        state.error != null -> Text(
-            "Ошибка: ${state.error}",
-            color = MaterialTheme.colorScheme.error
+    val currentState = state
+    when (currentState) {
+        is HistoryState.Initial,
+        is HistoryState.Loading,
+            -> CircularProgressIndicator(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.onPrimary
         )
 
-        state.history.isEmpty() -> InfoScreen(onBackToStart)
-
-        else -> LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(state.history) { entry ->
-                val isSelected = state.selectedItemId == entry.id
-                val isDimmed = state.selectedItemId != null && !isSelected
-                HistoryItem(
-                    model = entry,
-                    isDimmed = isDimmed,
-                    isSelected = isSelected,
-                    onLongClick = viewModel::selectItem,
-                    onDelete = { viewModel.deleteEntry(entry.id) },
-                    onNextScreen = { onNavigateDetailedScreen(entry.id) }
-                )
-            }
-        }
+        is HistoryState.Content ->
+            if (currentState.history.isEmpty())
+                InfoScreen(onBackToStart)
+            else
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(currentState.history) { entry ->
+                        val isSelected = currentState.selectedItemId == entry.id
+                        HistoryItem(
+                            model = entry,
+                            isDimmed = currentState.selectedItemId != null && !isSelected,
+                            isSelected = isSelected,
+                            onLongClick = viewModel::selectItem,
+                            onDelete = { viewModel.deleteEntry(entry.id) },
+                            onNextScreen = { onNavigateDetailedScreen(entry.id) }
+                        )
+                    }
+                }
     }
 }
 
 
 @Composable
-fun InfoScreen(onBackToStart: () -> Unit) {
+private fun InfoScreen(onBackToStart: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -97,7 +99,7 @@ fun InfoScreen(onBackToStart: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun HistoryScreenPreview() {
+private fun HistoryScreenPreview() {
     SurfQuizTheme {
         HistoryItem(
             model = QuizHistoryUiModel(
