@@ -20,40 +20,31 @@ import ru.vsls.surfquiz.domain.usecase.GetQuizDetailsUseCase
 import ru.vsls.surfquiz.domain.usecase.GetQuizDetailsUseCaseImpl
 import ru.vsls.surfquiz.domain.usecase.SaveQuizDetailsUseCase
 import ru.vsls.surfquiz.domain.usecase.SaveQuizDetailsUseCaseImpl
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
     @Binds
-    @Singleton
     abstract fun bindQuizRepository(impl: QuizRemoteRepositoryImpl): QuizRemoteRepository
 
     @Binds
-    @Singleton
     abstract fun bindGetQuizzesUseCase(useCaseImpl: GetQuizzesUseCaseImpl): GetQuizzesUseCase
 
     @Binds
-    @Singleton
     abstract fun bindQuizLocalRepository(impl: QuizLocalRepositoryImpl): QuizLocalRepository
 
     @Binds
-    @Singleton
     abstract fun bindGetQuizHistoryUseCase(impl: GetQuizHistoryUseCaseImpl): GetQuizHistoryUseCase
 
     @Binds
-    @Singleton
     abstract fun bindSaveQuizHistoryUseCase(impl: SaveQuizHistoryUseCaseImpl): SaveQuizHistoryUseCase
 
     @Binds
-    @Singleton
     abstract fun bindDeleteQuizHistoryEntryUseCase(impl: DeleteQuizHistoryEntryUseCaseImpl): DeleteQuizHistoryEntryUseCase
 
     @Binds
-    @Singleton
     abstract fun bindSaveQuizDetailsUseCase(impl: SaveQuizDetailsUseCaseImpl): SaveQuizDetailsUseCase
 
     @Binds
-    @Singleton
     abstract fun bindGetQuizDetailsUseCase(impl: GetQuizDetailsUseCaseImpl): GetQuizDetailsUseCase
 }

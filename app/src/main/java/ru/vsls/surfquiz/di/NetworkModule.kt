@@ -3,6 +3,7 @@ package ru.vsls.surfquiz.di
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.InstallIn
 import kotlinx.serialization.json.Json
@@ -19,6 +20,7 @@ object NetworkModule {
     private  const val BASE_URL = "https://opentdb.com/"
 
     @Provides
+    @Reusable
     fun provideRetrofit(): Retrofit {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
